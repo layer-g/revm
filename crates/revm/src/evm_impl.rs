@@ -53,30 +53,32 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Transact<DB::Error>
         let c1 = U64::try_from(1).expect("Failed to init unit");
         let category = match self.data.env.tx.transact_to {
             TransactTo::Create(_) => {
-                if value.ne(&U256::ZERO) && data.is_empty() {
-                    c1
-                } else {
-                    c0
-                }
+                println!("debug create");
+                c0
             }
             TransactTo::Call(dest) => {
-                let mut maybe_res: Option<U64> = None;
-                for (k, v) in self.data.env.block.categories.iter() {
-                    maybe_res = match &v.whitelist {
-                        None => { None }
-                        Some(whitelist) => {
-                            if whitelist.contains(&dest) {
-                                Some(k.clone())
-                            } else {
-                                None
+                println!("debug call");
+                if data.is_empty() {
+                    c1
+                } else {
+                    let mut maybe_res: Option<U64> = None;
+                    for (k, v) in self.data.env.block.categories.iter() {
+                        maybe_res = match &v.whitelist {
+                            None => { None }
+                            Some(whitelist) => {
+                                if whitelist.contains(&dest) {
+                                    Some(k.clone())
+                                } else {
+                                    None
+                                }
                             }
-                        }
-                    };
-                    if maybe_res.is_some() { break; }
-                }
-                match maybe_res {
-                    None => { c0 }
-                    Some(category) => { category }
+                        };
+                        if maybe_res.is_some() { break; }
+                    }
+                    match maybe_res {
+                        None => { c0 }
+                        Some(category) => { category }
+                    }
                 }
             }
         };
