@@ -4,6 +4,8 @@ mod evm_impl;
 mod inspector;
 mod journaled_state;
 
+mod evm_transact_test;
+
 #[cfg(all(feature = "with-serde", not(feature = "serde")))]
 compile_error!("`with-serde` feature has been renamed to `serde`.");
 

@@ -171,12 +171,7 @@ impl Default for CfgEnv {
         }
     }
 }
-// #[derive(Clone, Debug, Eq, PartialEq)]
-// #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-// pub struct CategoryInfo {
-//     pub whitelist: Option<Vec<B160>>,
-//     pub scalar: U256,
-// }
+
 impl Default for BlockEnv {
     /// Default blockenv must have two categories, the default c0 and c1 for send eth
     fn default() -> BlockEnv {
