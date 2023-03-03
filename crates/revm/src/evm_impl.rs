@@ -53,9 +53,11 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Transact<DB::Error>
         let c1 = U64::try_from(1).expect("Failed to init unit");
         let category = match self.data.env.tx.transact_to {
             TransactTo::Create(_) => {
+                println!("debug create");
                 c0
             }
             TransactTo::Call(dest) => {
+                println!("debug call");
                 if data.is_empty() {
                     c1
                 } else {

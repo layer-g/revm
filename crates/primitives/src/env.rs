@@ -2,6 +2,7 @@ use crate::{alloc::vec::Vec, SpecId, B160, B256, U256};
 use bytes::Bytes;
 use core::cmp::min;
 use std::collections::HashMap;
+use std::ops::Div;
 use ruint::aliases::U64;
 
 #[derive(Clone, Debug, Default)]
@@ -170,13 +171,36 @@ impl Default for CfgEnv {
         }
     }
 }
-
+// #[derive(Clone, Debug, Eq, PartialEq)]
+// #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+// pub struct CategoryInfo {
+//     pub whitelist: Option<Vec<B160>>,
+//     pub scalar: U256,
+// }
 impl Default for BlockEnv {
+    /// Default blockenv must have two categories, the default c0 and c1 for send eth
     fn default() -> BlockEnv {
+        let unit = U256::try_from(1).expect("Can't create unit U256") >> 128;
+        let p50 = unit << 1;
+
+        let c0 = U64::ZERO;
+        let s0 = p50.clone();
+        let info0 = CategoryInfo {
+            whitelist: None,
+            scalar: s0,
+        };
+
+        let c1 = U64::try_from(1).expect("can't create category 1");
+        let s1 = p50.clone();
+        let info1 = CategoryInfo {
+            whitelist: None,
+            scalar: s1,
+        };
+
         let mut categories = HashMap::new();
-        let category = U64::ZERO;
-        let info = Default::default();
-        categories.insert(category, info);
+        categories.insert(c0, info0);
+        categories.insert(c1, info1);
+
         BlockEnv {
             gas_limit: U256::MAX,
             number: U256::ZERO,
@@ -224,6 +248,8 @@ impl Env {
     /// Use the category scalar to do fixed point multiplication and get adjusted base fee
     pub fn adjusted_basefee(&self) -> U256 {
         let category = self.tx.category;
+        println!("tx category {:?}", self.tx.category);
+        println!("block categories {:?}", self.block.categories);
         let scalar = self.block.categories.get(&category).expect("").scalar;
         let basefee = self.block.basefee;
         let adjusted_basefee = fixed_point_mult(scalar, basefee, 128);
