@@ -56,7 +56,7 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Transact<DB::Error>
                 c0
             }
             TransactTo::Call(dest) => {
-                if value.ne(&U256::ZERO) && data.is_empty() {
+                if data.is_empty() {
                     c1
                 } else {
                     let mut maybe_res: Option<U64> = None;
