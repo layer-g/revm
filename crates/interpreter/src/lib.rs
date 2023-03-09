@@ -1,5 +1,4 @@
-#![allow(dead_code)]
-//#![no_std]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 pub mod gas;
 mod host;
@@ -9,6 +8,7 @@ mod instructions;
 mod interpreter;
 
 extern crate alloc;
+extern crate core;
 
 pub(crate) const USE_GAS: bool = !cfg!(feature = "no_gas_measuring");
 
