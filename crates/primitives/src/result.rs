@@ -114,10 +114,11 @@ pub enum InvalidTransaction {
     },
     /// EIP-3860: Limit and meter initcode
     CreateInitcodeSizeLimit,
+    InvalidChainId,
 }
 
 /// When transaction return successfully without halts.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Eval {
     Stop,
@@ -127,7 +128,7 @@ pub enum Eval {
 
 /// Indicates that the EVM has experienced an exceptional halt. This causes execution to
 /// immediately end with all gas being consumed.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Halt {
     OutOfGas(OutOfGasError),
@@ -146,6 +147,8 @@ pub enum Halt {
     CreateContractSizeLimit,
     /// Error on created contract that begins with EF
     CreateContractStartingWithEF,
+    /// EIP-3860: Limit and meter initcode. Initcode size limit exceeded.
+    CreateInitcodeSizeLimit,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
