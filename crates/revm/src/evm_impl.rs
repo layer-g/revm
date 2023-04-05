@@ -103,6 +103,11 @@ impl<'a, GSPEC: Spec, DB: Database, const INSPECT: bool> Transact<DB::Error>
             #[cfg(not(feature = "optional_no_base_fee"))]
             let disable_base_fee = false;
 
+            #[cfg(feature = "optional_no_base_fee")]
+            let disable_base_fee = self.env().cfg.disable_base_fee;
+            #[cfg(not(feature = "optional_no_base_fee"))]
+            let disable_base_fee = false;
+
             // check minimal cost against basefee
             // TODO maybe do this checks when creating evm. We already have all data there
             // or should be move effective_gas_price inside transact fn
