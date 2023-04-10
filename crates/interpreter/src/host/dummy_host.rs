@@ -3,6 +3,7 @@ use crate::{
     primitives::{Env, Log, B160, B256, KECCAK_EMPTY},
     CallInputs, CreateInputs, Gas, Host, InstructionResult, Interpreter, SelfDestructResult,
 };
+use alloc::vec::Vec;
 
 pub struct DummyHost {
     pub env: Env,
@@ -98,7 +99,7 @@ impl Host for DummyHost {
     }
 
     fn selfdestruct(&mut self, _address: B160, _target: B160) -> Option<SelfDestructResult> {
-        panic!("Create is not supported for this host")
+        panic!("Selfdestruct is not supported for this host")
     }
 
     fn create(
